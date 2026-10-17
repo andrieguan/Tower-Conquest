@@ -1,32 +1,40 @@
+
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('game_settings', {
-      setting_id: {
+    await queryInterface.createTable('leaderboard', {
+      leaderboard_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      music_volume: {
+
+      player_name: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+
+      score: {
         type: Sequelize.INTEGER,
-        defaultValue: 80
+        allowNull: false,
+        defaultValue: 0
       },
-      sfx_volume: {
+
+      level_reached: {
         type: Sequelize.INTEGER,
-        defaultValue: 100
+        allowNull: false,
+        defaultValue: 1
       },
-      is_muted: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
-      },
+
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
+
       updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -36,6 +44,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('game_settings');
+    await queryInterface.dropTable('leaderboard');
   }
 };

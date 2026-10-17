@@ -3,24 +3,33 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('game_settings', {
-      setting_id: {
+    await queryInterface.createTable('users', {
+      user_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      music_volume: {
-        type: Sequelize.INTEGER,
-        defaultValue: 80
+      username: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
       },
-      sfx_volume: {
-        type: Sequelize.INTEGER,
-        defaultValue: 100
+      school_id: {
+        type: Sequelize.STRING,
+        allowNull: true
       },
-      is_muted: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
+      full_name: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      email: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      role: {
+        type: Sequelize.STRING,
+        allowNull: true
       },
       created_at: {
         allowNull: false,
@@ -35,7 +44,7 @@ module.exports = {
     });
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('game_settings');
+  async down(queryInterface) {
+    await queryInterface.dropTable('users');
   }
 };
