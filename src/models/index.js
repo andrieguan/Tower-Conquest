@@ -27,6 +27,17 @@ GameSetting.belongsTo(User, {
   as: 'host'
 });
 
+ // User and GameSession relationships
+User.hasMany(GameSession, {
+  foreignKey: 'host_id',
+  as: 'hostedSessions'
+});
+
+GameSession.belongsTo(User, {
+  foreignKey: 'host_id',
+  as: 'host'
+});
+
 // GameSession and Player relationships
 GameSession.hasMany(Player, {
   foreignKey: 'game_id',

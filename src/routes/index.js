@@ -12,9 +12,11 @@ router.use('/results', require('./results.routes'));
 // Week 11: identify the current user
 router.use(currentUser);
 
-// Module 1: Game Settings CRUD
+
+ // Module 1: Game Settings CRUD
 router.use('/game-settings', require('./game-setting.routes'));
 
-// Module 2: Game Sessions (we will add this later)
+// Module 2: Game Sessions and Players
+router.use('/sessions', require('./session.routes'));
 
 module.exports = router;
