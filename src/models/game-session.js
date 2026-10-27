@@ -1,3 +1,4 @@
+
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
@@ -9,9 +10,18 @@ module.exports = (sequelize, DataTypes) => {
     },
 
     session_code: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(6),
       allowNull: false,
       unique: true
+    },
+
+    host_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'users',
+        key: 'user_id'
+      }
     },
 
     game_name: {
