@@ -3,7 +3,7 @@
 const pkg = require('../../package.json');
 
 module.exports = {
-  slug: 'tower conquest',            // your group's game, lower case with hyphens, for example shelf-climb
+  slug: 'tower-conquest',            // your group's game, lower case with hyphens, for example shelf-climb
   name: 'Bibliopolis Tower Conquest',            // the name players will see
   team: 'team 10',            // your group's name and section, for example Bookworms (3-1)
   developer: 'andrieguan',       // YOUR GitHub username: this build is yours
