@@ -1,4 +1,3 @@
-
 const crypto = require('node:crypto');
 const { UniqueConstraintError } = require('sequelize');
 const repository = require('../repositories/session.repository');
@@ -73,11 +72,31 @@ async function getSession(code) {
 async function updateSession(code, data, user) {
   const session = await getSession(code);
 
+  // Only the session owner can change its status
   if (session.host_id !== user.user_id) {
     throw serviceError(
       403,
       'NOT_SESSION_OWNER',
       'You cannot update a session owned by another host.'
+    );
+  }
+
+  // Define allowed status transitions
+  const allowedTransitions = {
+    waiting: ['playing'],
+    playing: ['finished'],
+    finished: []
+  };
+
+  // Reject invalid transitions with 409 Conflict
+  if (
+    session.status !== data.status &&
+    !allowedTransitions[session.status]?.includes(data.status)
+  ) {
+    throw serviceError(
+      409,
+      'INVALID_STATUS_TRANSITION',
+      `Cannot change session status from '${session.status}' to '${data.status}'.`
     );
   }
 
