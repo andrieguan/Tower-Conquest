@@ -1,0 +1,89 @@
+
+const repository = require('../repositories/game-setting.repository');
+
+// Creates an error with an HTTP status.
+function serviceError(status, code, message) {
+  const error = new Error(message);
+  error.status = status;
+  error.statusCode = status;
+  error.code = code;
+  return error;
+}
+
+// Get all settings
+async function listSettings() {
+  return repository.findAll();
+}
+
+// Get one setting
+async function getSetting(settingId) {
+  const setting = await repository.findById(settingId);
+
+  if (!setting) {
+    throw serviceError(
+      404,
+      'SETTING_NOT_FOUND',
+      'The requested game setting does not exist.'
+    );
+  }
+
+  return setting;
+}
+
+// Create settings for the current host
+async function createSetting(data, user) {
+  return repository.create({
+    music_volume: data.music_volume,
+    sfx_volume: data.sfx_volume,
+    is_muted: data.is_muted,
+    host_id: user.user_id
+  });
+}
+
+// Update settings
+async function updateSetting(settingId, data, user) {
+  const setting = await getSetting(settingId);
+
+  if (setting.host_id !== user.user_id) {
+    throw serviceError(
+      403,
+      'NOT_SETTING_OWNER',
+      'You cannot modify settings owned by another host.'
+    );
+  }
+
+  return repository.update(setting, {
+    ...(data.music_volume !== undefined && {
+      music_volume: data.music_volume
+    }),
+    ...(data.sfx_volume !== undefined && {
+      sfx_volume: data.sfx_volume
+    }),
+    ...(data.is_muted !== undefined && {
+      is_muted: data.is_muted
+    })
+  });
+}
+
+// Delete settings
+async function deleteSetting(settingId, user) {
+  const setting = await getSetting(settingId);
+
+  if (setting.host_id !== user.user_id) {
+    throw serviceError(
+      403,
+      'NOT_SETTING_OWNER',
+      'You cannot delete settings owned by another host.'
+    );
+  }
+
+  await repository.remove(setting);
+}
+
+module.exports = {
+  listSettings,
+  getSetting,
+  createSetting,
+  updateSetting,
+  deleteSetting
+};

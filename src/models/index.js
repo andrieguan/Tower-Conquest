@@ -1,5 +1,4 @@
-// ONE Sequelize instance (one connection pool) for the whole API.
-// Every other file imports it from here - nobody opens a second one.
+
 const { Sequelize, DataTypes } = require('sequelize');
 const env = require('../config/env');
 const dbConfig = require('../config/database')[env.nodeEnv];
@@ -11,11 +10,52 @@ const sequelize = new Sequelize(
   dbConfig
 );
 
-// Week 11: load your models here, one line each, then add their associations.
-// Example:
-//   const User = require('./user')(sequelize, DataTypes);
-//   const Player = require('./player')(sequelize, DataTypes);
-//   User.hasMany(Player, { foreignKey: 'user_id' });
-//   Player.belongsTo(User, { foreignKey: 'user_id' });
+// Load models
+const User = require('./user')(sequelize, DataTypes);
+const GameSetting = require('./game-setting')(sequelize, DataTypes);
+const GameSession = require('./game-session')(sequelize, DataTypes);
+const Player = require('./player')(sequelize, DataTypes);
 
-module.exports = { sequelize, Sequelize, DataTypes };
+// User and GameSetting relationships
+User.hasMany(GameSetting, {
+  foreignKey: 'host_id',
+  as: 'gameSettings'
+});
+
+GameSetting.belongsTo(User, {
+  foreignKey: 'host_id',
+  as: 'host'
+});
+
+// GameSession and Player relationships
+GameSession.hasMany(Player, {
+  foreignKey: 'game_id',
+  as: 'players'
+});
+
+Player.belongsTo(GameSession, {
+  foreignKey: 'game_id',
+  as: 'gameSession'
+});
+
+// User and Player relationships
+User.hasMany(Player, {
+  foreignKey: 'user_id',
+  as: 'playerSeats'
+});
+
+Player.belongsTo(User, {
+  foreignKey: 'user_id',
+  as: 'user'
+});
+
+// Export models
+module.exports = {
+  sequelize,
+  Sequelize,
+  DataTypes,
+  User,
+  GameSetting,
+  GameSession,
+  Player
+};
