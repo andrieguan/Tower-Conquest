@@ -1,6 +1,6 @@
 // Guards a route.
 //   requireUser()                 any known account
-//   requireUser('HOST', 'ADMIN')  only these roles
+//   requireUser('host', 'player')  only these roles
 const { unauthorized, forbidden } = require('../errors/app-error');
 
 function requireUser(...roles) {
