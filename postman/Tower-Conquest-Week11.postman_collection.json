@@ -18,7 +18,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "\r\npm.test(\"Status code is 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Response contains a setting ID\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.data).to.have.property(\"setting_id\");\r\n});\r\n\r\n// Save the created ID for upcoming CRUD tests.\r\nif (pm.response.code === 201) {\r\n    const json = pm.response.json();\r\n\r\n    if (json.data && json.data.setting_id) {\r\n        pm.collectionVariables.set(\r\n            \"settingId\",\r\n            json.data.setting_id\r\n        );\r\n    }\r\n}\r\n"
+                  "\r\npm.test(\"Status code is 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\nif (pm.response.code === 201) {\r\n    const json = pm.response.json();\r\n\r\n    if (json.data && json.data.setting_id) {\r\n        pm.collectionVariables.set(\r\n            \"settingId\",\r\n            json.data.setting_id\r\n        );\r\n\r\n        console.log(\r\n            \"Saved settingId:\",\r\n            pm.collectionVariables.get(\"settingId\")\r\n        );\r\n    }\r\n}\r\n"
                 ]
               }
             }
@@ -95,7 +95,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3001/api/v1/game-settings?",
+              "raw": "http://localhost:3001/api/v1/game-settings",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -105,12 +105,6 @@
                 "api",
                 "v1",
                 "game-settings"
-              ],
-              "query": [
-                {
-                  "key": "",
-                  "value": ""
-                }
               ]
             }
           },
@@ -257,7 +251,7 @@
               }
             ],
             "url": {
-              "raw": "http://localhost:3001/api/v1/get-settings",
+              "raw": "http://localhost:3001/api/v1/game-settings",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -266,7 +260,7 @@
               "path": [
                 "api",
                 "v1",
-                "get-settings"
+                "game-settings"
               ]
             }
           },
@@ -294,7 +288,7 @@
               }
             ],
             "url": {
-              "raw": "http://localhost:3001/api/v1/game-settings/5",
+              "raw": "http://localhost:3001/api/v1/game-settings/{{settingId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -304,7 +298,7 @@
                 "api",
                 "v1",
                 "game-settings",
-                "5"
+                "{{settingId}}"
               ]
             }
           },
@@ -421,7 +415,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3001/api/v1/game-settings/5",
+              "raw": "http://localhost:3001/api/v1/game-settings/{{settingId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -431,7 +425,7 @@
                 "api",
                 "v1",
                 "game-settings",
-                "5"
+                "{{settingId}}"
               ]
             }
           },
@@ -472,7 +466,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3001/api/v1/game-settings/5",
+              "raw": "http://localhost:3001/api/v1/game-settings/{{settingId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -482,7 +476,7 @@
                 "api",
                 "v1",
                 "game-settings",
-                "5"
+                "{{settingId}}"
               ]
             }
           },
@@ -523,7 +517,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3001/api/v1/game-settings/5",
+              "raw": "http://localhost:3001/api/v1/game-settings/{{settingId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -533,7 +527,7 @@
                 "api",
                 "v1",
                 "game-settings",
-                "5"
+                "{{settingId}}"
               ]
             }
           },
@@ -561,7 +555,7 @@
               }
             ],
             "url": {
-              "raw": "http://localhost:3001/api/v1/game-settings/5",
+              "raw": "http://localhost:3001/api/v1/game-settings/{{settingId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -571,7 +565,7 @@
                 "api",
                 "v1",
                 "game-settings",
-                "5"
+                "{{settingId}}"
               ]
             }
           },
