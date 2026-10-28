@@ -1,0 +1,1185 @@
+{
+  "info": {
+    "_postman_id": "569b4588-ae05-4677-89df-00560c648a38",
+    "name": "Tower Conquest API - Week 11",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58983194",
+    "_collection_link": "https://go.postman.co/collection/58983194-569b4588-ae05-4677-89df-00560c648a38?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Module 1 - Game Settings",
+      "item": [
+        {
+          "name": "01 - Create Game Settings (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\r\npm.test(\"Status code is 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\nif (pm.response.code === 201) {\r\n    const json = pm.response.json();\r\n\r\n    if (json.data && json.data.setting_id) {\r\n        pm.collectionVariables.set(\r\n            \"settingId\",\r\n            json.data.setting_id\r\n        );\r\n\r\n        console.log(\r\n            \"Saved settingId:\",\r\n            pm.collectionVariables.get(\"settingId\")\r\n        );\r\n    }\r\n}\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"music_volume\": 80,\r\n  \"sfx_volume\": 70,\r\n  \"is_muted\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/v1/game-settings",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "game-settings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 - Invalid Game Settings (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\r\npm.test(\"Status code is 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Error code is VALIDATION_FAILED\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.error.code).to.eql(\"VALIDATION_FAILED\");\r\n});\r\n\r\npm.test(\"Error message mentions music volume\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.error.message.toLowerCase())\r\n        .to.include(\"music volume\");\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"music_volume\": 150,\r\n  \"sfx_volume\": 70,\r\n  \"is_muted\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/v1/game-settings",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "game-settings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 - Malformed JSON (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\r\npm.test(\"Status code is 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Error code is INVALID_JSON\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.error.code).to.eql(\"INVALID_JSON\");\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"music_volume\": 80,\r\n  \"sfx_volume\": 70,\r\n  \"is_muted\": false,\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/v1/game-settings",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "game-settings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 - Missing User Header (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\r\npm.test(\"Status code is 401\", function () {\r\n    pm.response.to.have.status(401);\r\n});\r\n\r\npm.test(\"Error code is AUTH_REQUIRED\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.error.code).to.eql(\"AUTH_REQUIRED\");\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3001/api/v1/game-settings",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "game-settings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 - Player Access Forbidden (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\r\npm.test(\"Status code is 403\", function () {\r\n    pm.response.to.have.status(403);\r\n});\r\n\r\npm.test(\"Error code is FORBIDDEN\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.error.code).to.eql(\"FORBIDDEN\");\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Demo-User",
+                "value": "SCH003"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/v1/game-settings",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "game-settings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "06 - List Game Settings (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response contains an array of settings\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.data).to.be.an(\"array\");\r\n});\r\n\r\npm.test(\"Settings contain valid IDs\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.data.length).to.be.greaterThan(0);\r\n\r\n    json.data.forEach(function (setting) {\r\n        pm.expect(setting).to.have.property(\"setting_id\");\r\n    });\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/v1/game-settings",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "game-settings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "07 - Get One Game Setting (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response contains the requested setting\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.data).to.have.property(\"setting_id\");\r\n\r\n    pm.expect(Number(json.data.setting_id))\r\n        .to.eql(Number(pm.collectionVariables.get(\"settingId\")));\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/v1/game-settings/{{settingId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "game-settings",
+                "{{settingId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "08 - Game Setting Not Found (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\r\npm.test(\"Status code is 404\", function () {\r\n    pm.response.to.have.status(404);\r\n});\r\n\r\npm.test(\"Error code is SETTING_NOT_FOUND\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.error.code).to.eql(\"SETTING_NOT_FOUND\");\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/v1/game-settings/999999999",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "game-settings",
+                "999999999"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "09 - Invalid Setting ID (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\r\npm.test(\"Status code is 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Error code is VALIDATION_FAILED\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.error.code).to.eql(\"VALIDATION_FAILED\");\r\n});\r\n\r\npm.test(\"Error message mentions setting ID\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.error.message.toLowerCase())\r\n        .to.include(\"setting id\");\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/v1/game-settings/abc",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "game-settings",
+                "abc"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "10 - Update Game Settings (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Updated settings contain correct values\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.data.music_volume).to.eql(50);\r\n    pm.expect(json.data.sfx_volume).to.eql(60);\r\n    pm.expect(json.data.is_muted).to.eql(true);\r\n});\r\n\r\npm.test(\"Updated setting ID matches requested ID\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(Number(json.data.setting_id))\r\n        .to.eql(Number(pm.collectionVariables.get(\"settingId\")));\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"music_volume\": 50,\r\n  \"sfx_volume\": 60,\r\n  \"is_muted\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/v1/game-settings/{{settingId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "game-settings",
+                "{{settingId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "11 - Wrong Host Update (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\r\npm.test(\"Status code is 403\", function () {\r\n    pm.response.to.have.status(403);\r\n});\r\n\r\npm.test(\"Error code is NOT_SETTING_OWNER\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.error.code).to.eql(\"NOT_SETTING_OWNER\");\r\n});\r\n\r\npm.test(\"Error message explains ownership\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.error.message.toLowerCase())\r\n        .to.include(\"another host\");\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "X-Demo-User",
+                "value": "SCH002"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"music_volume\": 90\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/v1/game-settings/{{settingId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "game-settings",
+                "{{settingId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "12 - Empty PATCH (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\r\npm.test(\"Status code is 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Error code is VALIDATION_FAILED\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.error.code).to.eql(\"VALIDATION_FAILED\");\r\n});\r\n\r\npm.test(\"Error explains that an update field is required\", function () {\r\n    const json = pm.response.json();\r\n\r\n    pm.expect(json.error.message.toLowerCase())\r\n        .to.include(\"at least one setting field\");\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/v1/game-settings/{{settingId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "game-settings",
+                "{{settingId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "13 - Delete Game Settings (204)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\r\npm.test(\"Status code is 204\", function () {\r\n    pm.response.to.have.status(204);\r\n});\r\n\r\npm.test(\"Response body is empty\", function () {\r\n    pm.expect(pm.response.text()).to.eql(\"\");\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/v1/game-settings/{{settingId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "game-settings",
+                "{{settingId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Module 2 - Sessions and Players",
+      "item": [
+        {
+          "name": "01 - Host creates session (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Host creates a session with 201\", function () {\r\n    pm.response.to.have.status(201);\r\n\r\n    const body = pm.response.json();\r\n    pm.expect(body.data).to.have.property(\"session_code\");\r\n    pm.expect(String(body.data.session_code)).to.match(/^\\d{6}$/);\r\n    pm.collectionVariables.set(\"session_code\", body.data.session_code);\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"game_name\": \"Tower Conquest\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/v1/sessions",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "sessions"
+              ],
+              "query": [
+                {
+                  "key": "",
+                  "value": "application/json",
+                  "disabled": true
+                },
+                {
+                  "key": "X-Demo-User",
+                  "value": "SCH001",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 - Other user cannot start session (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Other user cannot update another host's session\", function () {\r\n    pm.response.to.have.status(403);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Demo-User",
+                "value": "SCH002"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"playing\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/v1/sessions/294811",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "sessions",
+                "294811"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 - Host reads session (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Session can be read successfully\", function () {\r\n    pm.response.to.have.status(200);\r\n    const body = pm.response.json();\r\n    pm.expect(body.data).to.exist;\r\n    pm.expect(String(body.data.session_code)).to.match(/^\\d{6}$/);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": true
+              },
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/v1/sessions/294811",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "sessions",
+                "294811"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 - Invalid session code (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Invalid session code returns 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/v1/sessions/123",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "sessions",
+                "123"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 - Session not found (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Unknown session code returns 404\", function () {\r\n    pm.response.to.have.status(404);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/v1/sessions/999999",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "sessions",
+                "999999"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "06 - Player joins session (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Player joins session with 201\", function () {\r\n    pm.response.to.have.status(201);\r\n    const body = pm.response.json();\r\n    pm.expect(body.data).to.exist;\r\n    pm.expect(body.data).to.have.property(\"player_id\");\r\n    pm.collectionVariables.set(\"player_id\", pm.response.json().data.player_id);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Demo-User",
+                "value": "SCH003"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/v1/sessions/{{session_code}}/players",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "sessions",
+                "{{session_code}}",
+                "players"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "07 - Same player rejoins session (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Rejoining returns 200\", function () {\r\n    pm.response.to.have.status(200);\r\n    const body = pm.response.json();\r\n    pm.expect(pm.response.json().data.player_id)\r\n    .to.eql(pm.collectionVariables.get(\"player_id\"));\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Demo-User",
+                "value": "SCH003"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/v1/sessions/{{session_code}}/players",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "sessions",
+                "{{session_code}}",
+                "players"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "08 - Second player joins session (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Second player joins with 201\", function () {\r\n    pm.response.to.have.status(201);\r\n    const body = pm.response.json();\r\n    pm.expect(body.data).to.have.property(\"player_id\");\r\n    pm.expect(body.data.user_id).to.eql(4);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Demo-User",
+                "value": "SCH004"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/v1/sessions/{{session_code}}/players",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "sessions",
+                "{{session_code}}",
+                "players"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "09 - Invalid session status (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Invalid session status returns 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"launched\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/v1/sessions/{{session_code}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "sessions",
+                "{{session_code}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "10 - Host starts session (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Host starts session with 200\", function () {\r\n    pm.response.to.have.status(200);\r\n    const body = pm.response.json();\r\n    pm.expect(body.data.status).to.eql(\"playing\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"playing\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/v1/sessions/{{session_code}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "sessions",
+                "{{session_code}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "11 - Player joins after session starts (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Player cannot join a started session\", function () {\r\n    pm.response.to.have.status(409);\r\n    const body = pm.response.json();\r\n    pm.expect(body.error.code).to.eql(\"SESSION_NOT_JOINABLE\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Demo-User",
+                "value": "SCH002"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/v1/sessions/{{session_code}}/players",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "sessions",
+                "{{session_code}}",
+                "players"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "12 - Invalid status transition (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Invalid status transition returns 409\", function () {\r\n    pm.response.to.have.status(409);\r\n\r\n    const body = pm.response.json();\r\n    pm.expect(body.error.code).to.eql(\"INVALID_STATUS_TRANSITION\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Demo-User",
+                "value": "SCH001"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"waiting\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/v1/sessions/{{session_code}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "v1",
+                "sessions",
+                "{{session_code}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Test Host User",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-Demo-User",
+            "value": "SCH001"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3001/api/v1/health?=",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "api",
+            "v1",
+            "health"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "settingId",
+      "value": ""
+    },
+    {
+      "key": "session_code",
+      "value": ""
+    },
+    {
+      "key": "player_id",
+      "value": ""
+    }
+  ]
+}
