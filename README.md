@@ -1,10 +1,10 @@
-# [Bibliopolis Tower Conquest API
+# Bibliopolis Tower Conquest API
 
 Backend API for **[Bibliopolis Tower Conquest]**, a tournament game for the SorSU Bulan Campus library.
 CS 313 Software Engineering 1, A.Y. 2026-2027.
 
-- Developer: [Guan Andrie.] ([andrieguan]), BSCS [3-2]
-- Group and game concept: [Group name]
+- Developer: [Guan Andrie] (andrieguan), BSCS [3-2]
+- Group and game concept: [Team 10]
 
 This is my own build of my group's game concept. Every commit in this repository was made by me, with Git, on my own computer or in my own Codespace.
 
